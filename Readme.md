@@ -80,3 +80,29 @@ if (fs.existsSync('./docs/deleteme.txt')) {
     } )
 }
 ```
+
+# Streams
+
+To read and write large size of data use Streams
+
+To read and write a file
+
+Fs.createReadStream('path', {encoding: 'utf-8'})
+Fs. createWriteStream('path')
+
+Add a event listener
+
+``` javascript
+readStream.on('data', (chunk) => {
+    console.log('\n------New Chunk------\n')
+    console.log(chunk)
+    writeStream.write('\nNew Chunk\n')
+    writeStream.write(chunk)
+})
+
+```
+A much simpler way
+ 
+``` javascript
+readStream.pipe(writeStream)
+```
