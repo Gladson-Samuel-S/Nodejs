@@ -7,5 +7,7 @@ const filteredAge =  age.filter((item) => {
 
 console.log(filteredAge)
 
+// Default os from node js
+
 const os = require('os')
 console.log(os.platform(), os.homedir())
