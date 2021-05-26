@@ -18,7 +18,7 @@ Modules can be imported and used in a file using
 	1. Require
 	2. Import
 
-To export something
+To export something which may be used later we can do
 
 ``` javascript
 module.exports = {
