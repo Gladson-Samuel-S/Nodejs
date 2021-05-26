@@ -1,21 +1,42 @@
-# Creating a Server
+# Request and Response
 
-Generally, When we type an address( ie Google.com ) in the browser It sends a request( GET request ) to the server. It sends a web page as a response.
-
-With Node js we can create our own server where we can manage all the requests which are
-Made to our website.
+When the client requests for some data we either send images, html, text or links etc…
+this depends.But Inorder to send HTML to the webpage
 
 ``` javascript
-const http = require('http')
+    res.setHeader('Content-Type', 'text/html')
+	
+    fs.readFile(path, (err, data) => {
+        if(err) {
+            console.log(err)
+            res.end()
+        } else {
+            res.end(data)
+        }
+    })
 
+```
 
-const server = http.createServer((req, res) => {
-    console.log('request made')
-})
+# Routing in Node js
 
-
-server.listen(3000, 'localhost', () => {
-    console.log('listening for request on port 3000')
-})
-
+``` javascript
+        switch(req.url) {
+        case '/':
+            path += 'index.html'
+            res.statusCode = 200
+            break
+        case '/about':
+            path += 'about.html'
+            res.statusCode = 200
+            break
+        case '/about-me':
+            res.statusCode = 301
+            res.setHeader('location', '/about')
+            res.end()
+            break
+        default:
+            path += '404.html'
+            res.statusCode = 404
+            break
+    }
 ```
