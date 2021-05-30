@@ -4,6 +4,7 @@
   "description": "When the client requests for some data we either send images, html, text or links etc… this depends.But Inorder to send HTML to the webpage",
   "main": "server.js",
   "dependencies": {
+    "ejs": "^3.1.6",
     "express": "^4.17.1"
   },
   "devDependencies": {},
