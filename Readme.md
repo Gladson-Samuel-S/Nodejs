@@ -1,81 +1,28 @@
-# Request and Response
+# Working with view engines
 
-When the client requests for some data we either send images, html, text or links etc…
-this depends.But Inorder to send HTML to the webpage
+Set view Engine
 
 ``` javascript
-    res.setHeader('Content-Type', 'text/html')
-	
-    fs.readFile(path, (err, data) => {
-        if(err) {
-            console.log(err)
-            res.end()
-        } else {
-            res.end(data)
-        }
-    })
-
+    app.set('view engine', 'ejs')
 ```
 
-## Routing in Node js
+To render ejs files with express
 
 ``` javascript
-        switch(req.url) {
-        case '/':
-            path += 'index.html'
-            res.statusCode = 200
-            break
-        case '/about':
-            path += 'about.html'
-            res.statusCode = 200
-            break
-        case '/about-me':
-            res.statusCode = 301
-            res.setHeader('location', '/about')
-            res.end()
-            break
-        default:
-            path += '404.html'
-            res.statusCode = 404
-            break
-    }
+    res.render('index', {title: 'Home', blogs})
 ```
 
-# Initializing Express
+Including and displaying ejs
 
 ``` javascript
-    // express app
-    const app = express()
+    <%- include('./partials/head.ejs') %>
 
-    // listen for request
-    app.listen(3000)
-```
-
-## Listening for get Requests
-
-``` javascript
-    app.get('/', (req, res) => {
-    res.sendFile('./views/index.html', { root: __dirname })
-})
-
-app.get('/about', (req, res) => {
-    res.sendFile('./views/about.html', {root: __dirname})
-})
-
-```
-1. No status required
-2. Header content is also not required
-
-## Redirects
-``` javascript
-    app.get('/about-us', (req, res) => {
-        console.log(req.url)
-        res.redirect('/about')
-    })
-```
-## 404 page
-``` javascript
-    app.use((req, res) => {
-        res.status(404).sendFile('./views/404.html', {root: __dirname})
-    })
+    <% if (blogs.length > 0) { %>
+      <% blogs.forEach(blog => { %>
+        <h3 class="title"><%= blog.title %></h3>
+        <p class="snippet"><%= blog.snippet %></p>
+      <% }) %>
+    <% } else { %>
+      <p>There are no blogs to display...</p>
+    <% } %>
 ```
