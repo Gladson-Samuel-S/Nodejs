@@ -2,19 +2,19 @@
 
 Set view Engine
 
-``` javascript
-    app.set('view engine', 'ejs')
+```javascript
+app.set("view engine", "ejs")
 ```
 
 To render ejs files with express
 
-``` javascript
-    res.render('index', {title: 'Home', blogs})
+```javascript
+res.render("index", { title: "Home", blogs })
 ```
 
 Including and displaying ejs
 
-``` javascript
+```javascript
     <%- include('./partials/head.ejs') %>
 
     <% if (blogs.length > 0) { %>
@@ -26,3 +26,11 @@ Including and displaying ejs
       <p>There are no blogs to display...</p>
     <% } %>
 ```
+
+# Next()
+
+The order of the methods is very important
+
+Eg :- if the browser is requesting for a "/" page Express looks from top to bottom
+If It finds out app.use() It will send that as a response and will not proceed further
+Hence we need to use Next() function to further match the requests.
