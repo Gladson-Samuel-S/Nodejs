@@ -91,3 +91,63 @@ app.get("/all-blogs", (req, res) => {
     })
 })
 ```
+
+# POST Request
+
+Listen for POST request
+
+To get the data from the form we have to use a middleware to get it from the POST method.
+
+```javascript
+app.use(express.urlencoded({ extended: true }))
+```
+
+The req.body has access to the form data in json format
+
+```javascript
+app.post("/blogs", (req, res) => {
+  const blog = new Blog(req.body)
+  blog
+    .save()
+    .then((result) => {
+      res.redirect("/blogs")
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+```
+
+Note:- The above code saves the blog to the database and redirects to all blogs page. Redirects happen only when dealing with form data.
+
+# DELETE Request
+
+Client side request to the browser
+
+```javascript
+const trashcan = document.querySelector(".delete")
+trashcan.addEventListener("click", (e) => {
+  const endpoint = `/blogs/${trashcan.dataset.doc}`
+  fetch(endpoint, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      response.json().then((data) => (window.location.href = data.redirect))
+    })
+    .catch((err) => console.log(err))
+})
+```
+
+From the browser we are asking node js to delete that particular blog with that id
+Node js sends a response in json ie the redirect endpoint
+
+```javascript
+app.delete("/blogs/:id", (req, res) => {
+  const id = req.params.id
+  Blog.findByIdAndDelete(id)
+    .then((result) => {
+      res.json({ redirect: "/blogs" })
+    })
+    .catch((err) => console.log(err))
+})
+```
