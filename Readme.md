@@ -151,3 +151,11 @@ app.delete("/blogs/:id", (req, res) => {
     .catch((err) => console.log(err))
 })
 ```
+
+# MVC
+
+Keeps code modular, reusable and easier to read.
+
+Views -> The files sent to the browser that the user can see.
+Model -> Database Model
+Controller -> Controller forms the link between Model and views.
