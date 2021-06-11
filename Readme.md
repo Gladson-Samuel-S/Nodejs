@@ -1,3 +1,6 @@
+# Navigate through the branches to learn from start
+<br>
+
 # Getting Started
 
 Go to mongo db atlas create a cluster
@@ -13,6 +16,12 @@ Add a user and the ip address
 ```
 
 ## Connecting to the cluster
+```javascript
+mongoose
+  .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then((result) => app.listen(3000))
+  .catch((err) => console.log(err))
+```
 
 
 ## Creating a Schema in MongoDB
