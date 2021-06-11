@@ -1,108 +1,155 @@
-# Node js
+# Getting Started
 
-Node.js® is a JavaScript runtime built on Chrome's V8 JavaScript engine.
+Go to mongo db atlas create a cluster
+https://www.mongodb.com/cloud/atlas
 
-# Node Global Variable
+Add a user and the ip address
 
-Global functions/variables can be accessed with or without the global
-For example setTimeout or global.setTimeout
+# Mongoose
 
-``` javascript
-console.log(__dirname)
-console.log(__filename)
+```javascript
+  npm install mongoose
+  const mongoose = require("mongoose")
 ```
 
-# Node Modules
+## Connecting to the cluster
 
-Modules can be imported and used in a file using
-	1. Require
-	2. Import
 
-To export something which may be used later we can do
+## Creating a Schema in MongoDB
 
-``` javascript
-module.exports = {
-    people,
-    age
-}
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
+
+```javascript
+const blogSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    snippet: {
+      type: String,
+      required: true,
+    },
+    body: {
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+)
 ```
 
-# Node File system
+By using timestamps mongoose will automatically add createdAt and updatedAt
+Key value pairs
 
-We need to import fs module
+## Creating a model
 
-Inorder to read a file we can use fs.readFile('path', (callback fn))
-
-``` javascript
-fs.readFile('./docs/Welcome.txt', (err, data) => {
-    if(err) {
-        console.log(err)
-    }
-    console.log(data.toString())
-})
+```javascript
+const Blog = mongoose.model("Blog", blogSchema)
+module.exports = Blog
 ```
 
-Writing files
-``` javascript
-fs.writeFile('./docs/Welcome.txt', 'Hello Gladson', () => {
-    console.log('file written')
-})
-```
+# Adding data to the collections
 
-Directories
-To check whether something exists or not, we can use fs.existsSync
-``` javascript
-if(!fs.existsSync('./assets')) {
-    fs.mkdir('./assets', (err) => {
-        if(err) {
-            console.log(err)
-        }
-        console.log('Folder Created')
+blog.save will save it to the database simple as that
+
+```javascript
+app.get("/add-blog", (req, res) => {
+  const blog = new Blog({
+    title: "Blog 2",
+    snippet: "Blog 2",
+    body: "more about Blog 2",
+  })
+  blog
+    .save()
+    .then((result) => {
+      res.send(result)
     })
-} else {
-    fs.rmdir('./assets', (err) => {
-        if(err) {
-            console.log(err)
-        }
-        console.log('folder deleted')
+    .catch((err) => {
+      console.log(err)
     })
-}
-```
-
-Deleting files
-``` javascript
-if (fs.existsSync('./docs/deleteme.txt')) {
-    fs.unlink('./docs/deleteme.txt', (err) => {
-        if(err) {
-            console.log(err)    
-        }
-        console.log('file deleted')
-    } )
-}
-```
-
-# Streams
-
-To read and write large size of data use Streams
-
-To read and write a file
-
-Fs.createReadStream('path', {encoding: 'utf-8'})
-Fs. createWriteStream('path')
-
-Add a event listener
-
-``` javascript
-readStream.on('data', (chunk) => {
-    console.log('\n------New Chunk------\n')
-    console.log(chunk)
-    writeStream.write('\nNew Chunk\n')
-    writeStream.write(chunk)
 })
+```
 
+# Querying from the database
+
+```javascript
+app.get("/all-blogs", (req, res) => {
+  Blog.find()
+    .then((result) => {
+      res.send(result)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
 ```
-A much simpler way
- 
-``` javascript
-readStream.pipe(writeStream)
+
+# POST Request
+
+Listen for POST request
+
+To get the data from the form we have to use a middleware to get it from the POST method.
+
+```javascript
+app.use(express.urlencoded({ extended: true }))
 ```
+
+The req.body has access to the form data in json format
+
+```javascript
+app.post("/blogs", (req, res) => {
+  const blog = new Blog(req.body)
+  blog
+    .save()
+    .then((result) => {
+      res.redirect("/blogs")
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
+```
+
+Note:- The above code saves the blog to the database and redirects to all blogs page. Redirects happen only when dealing with form data.
+
+# DELETE Request
+
+Client side request to the browser
+
+```javascript
+const trashcan = document.querySelector(".delete")
+trashcan.addEventListener("click", (e) => {
+  const endpoint = `/blogs/${trashcan.dataset.doc}`
+  fetch(endpoint, {
+    method: "DELETE",
+  })
+    .then((response) => {
+      response.json().then((data) => (window.location.href = data.redirect))
+    })
+    .catch((err) => console.log(err))
+})
+```
+
+From the browser we are asking node js to delete that particular blog with that id
+Node js sends a response in json ie the redirect endpoint
+
+```javascript
+app.delete("/blogs/:id", (req, res) => {
+  const id = req.params.id
+  Blog.findByIdAndDelete(id)
+    .then((result) => {
+      res.json({ redirect: "/blogs" })
+    })
+    .catch((err) => console.log(err))
+})
+```
+
+# MVC
+
+Keeps code modular, reusable and easier to read.
+
+Views -> The files sent to the browser that the user can see.
+Model -> Database Model
+Controller -> Controller forms the link between Model and views.
