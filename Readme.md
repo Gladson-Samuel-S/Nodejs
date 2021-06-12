@@ -1,6 +1,3 @@
-# Navigate through the branches to learn from start
-<br>
-
 # Getting Started
 
 Go to mongo db atlas create a cluster
@@ -162,3 +159,5 @@ Keeps code modular, reusable and easier to read.
 Views -> The files sent to the browser that the user can see.
 Model -> Database Model
 Controller -> Controller forms the link between Model and views.
+
+These are my notes from the complete nodejs course by Net ninja on YouTube. 
